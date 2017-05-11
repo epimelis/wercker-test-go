@@ -1,0 +1,6 @@
+FROM scratch
+#ADD www /
+COPY  www /
+COPY templates templates
+CMD ["/www"]
+
