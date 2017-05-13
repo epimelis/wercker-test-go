@@ -1,1 +1,5 @@
 language: go
+before_install:
+  - docker build -t epimelis1/wercker-test-go -f Dockerfile.scratch .
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker push epimelis1/wercker-test-go
