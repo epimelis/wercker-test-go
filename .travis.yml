@@ -2,8 +2,22 @@ sudo: required
 language: go
 services:
   - docker
+env:
+  global:
+  - COMMIT=${TRAVIS_COMMIT::8}
+  - REPO=epimelis1/wercker-test-go
+  - CGO_ENABLED=0
+  - GOOS=linux
+  - GOARCH=amd64
 before_install:
-  - docker build -t epimelis1/wercker-test-go -f Dockerfile.scratch .
+  - docker build -t $REPO -f Dockerfile.scratch .
+  - 
+after_success:
+# - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker tag epimelis1/wercker-test-go epimelis1/wercker-test-go:zzz2
-  - docker push epimelis1/wercker-test-go
+  - export REPO=epimelis1/wercker-test-go
+# - docker tag epimelis1/wercker-test-go epimelis1/wercker-test-go:zzz2
+# - docker push epimelis1/wercker-test-go
+  - docker tag $REPO:$COMMIT $REPO:$TAG
+  - docker tag $REPO:$COMMIT $REPO:$TRAVIS_BUILD_NUMBER
+  - docker push $REPO
