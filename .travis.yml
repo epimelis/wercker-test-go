@@ -10,8 +10,8 @@ env:
   - GOOS=linux
   - GOARCH=amd64
 before_install:
+  - go build -o www main.go
   - docker build -t $REPO -f Dockerfile.scratch .
-  - 
 after_success:
 # - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
