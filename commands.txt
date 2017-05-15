@@ -1,6 +1,13 @@
-go build -o www main.go
+---------------------
 CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o www main.go
+
+---------------------
+export CGO_ENABLED=0
+export GOOS=linux
+go build -o www main.go
+
+---------------------
+
 docker build -t epimelis1/wercker-test-go -f Dockerfile.scratch .
 docker run --rm -p 5000:6000 -e WEB_SERVER_PORT=:6000  epimelis1/wercker-test-go
 docker push epimelis1/wercker-test-go
-
