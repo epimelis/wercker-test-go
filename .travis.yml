@@ -14,16 +14,18 @@ before_install:
   - docker build -t $REPO -f Dockerfile.scratch .
 after_success:
   - echo $REPO
-  - echo $COMMIT
-  - echo $TRAVIS_COMMIT
   - echo $TRAVIS_BRANCH
   - echo $TRAVIS_BUILD_NUMBER
+  - echo $TRAVIS_COMMIT
+  - echo $COMMIT
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latestMaster"; else echo $TRAVIS_BRANCH ; fi`
   - echo $TAG
+  - export REPOZZ="epimelis1/wercker-test-go"
+  - echo $REPOZZ
   #-----------push to Docker hub-------------------------------
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  - docker tag $REPO:$COMMIT $REPO:$TAG
-  - docker tag $REPO:$COMMIT $REPO:$TRAVIS_BUILD_NUMBER
+  - docker tag $REPOZZ:$COMMIT $REPOZZ:$TAG
+  - docker tag $REPOZZ:$COMMIT $REPOZZ:$TRAVIS_BUILD_NUMBER
   - docker push $REPO
 
 # - export REPO=epimelis1/wercker-test-go
