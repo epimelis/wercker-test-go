@@ -18,12 +18,13 @@ after_success:
   - echo $TRAVIS_BUILD_NUMBER
   - echo $TRAVIS_COMMIT
   - echo $COMMIT
-  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latestMaster"; else echo $TRAVIS_BRANCH ; fi`
-  - echo $TAG  
+  - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
+  - echo $TAG
+  - echo $REPO:$TRAVIS_BRANCH|$TRAVIS_BUILD_NUMBER|$COMMIT
   #-----------push to Docker hub-------------------------------
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - docker tag $REPO $REPO:$TAG
-  - docker tag $REPO $REPO:$TRAVIS_BUILD_NUMBER
+  - docker tag $REPO $REPO:$TRAVIS_BRANCH|$TRAVIS_BUILD_NUMBER|$COMMIT
   - docker push $REPO
 
 # - export REPO=epimelis1/wercker-test-go
