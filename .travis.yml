@@ -24,7 +24,7 @@ after_success:
   #-----------push to Docker hub-------------------------------
   - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
   - docker tag $REPO $REPO:$TAG
-  - docker tag $REPO $REPO:$TRAVIS_BRANCH|$TRAVIS_BUILD_NUMBER|$COMMIT
+  - docker tag $REPO $REPO:$TRAVIS_BRANCH~$TRAVIS_BUILD_NUMBER~$COMMIT
   - docker push $REPO
 
 # - export REPO=epimelis1/wercker-test-go
