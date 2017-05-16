@@ -39,6 +39,7 @@ after_success:
   - export PATH=$PATH:$HOME/.local/bin # put aws in the path
   - eval $(aws ecr get-login --region us-west-2) #needs AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY envvars
   - docker tag $REPO:latest 053029339054.dkr.ecr.us-west-2.amazonaws.com/$REPO:latest
+  - docker tag $REPO:latest 053029339054.dkr.ecr.us-west-2.amazonaws.com/$REPO:$TRAVIS_BRANCH-build$TRAVIS_BUILD_NUMBER-$COMMIT
   - docker push 053029339054.dkr.ecr.us-west-2.amazonaws.com/$REPO:latest
 
 #-------------------------------------------------
