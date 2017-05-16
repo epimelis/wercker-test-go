@@ -4,22 +4,25 @@ services:
   - docker
 env:
   global:
-  #- REPO=epimelis1/wercker-test-go # repository for Docker Hub
-  - REPO=webapp-go #repository for AWS ECR
   - CGO_ENABLED=0
   - GOOS=linux
   - GOARCH=amd64
+  - REPO_DHUB=epimelis1/wercker-test-go # repository for Docker Hub
+  - REPO_ECR=webapp-go #repository for AWS ECR
 before_install:
   - echo "Start go build..."
   - go build -o www main.go  # build go binaries
+  - docker --version  # document the version travis is using
   - echo "Start docker build..."
-  - docker build -t $REPO -f Dockerfile.scratch .  # build docker image
+  - docker build -t $REPO_DHUB -f Dockerfile.scratch .  # build docker image for docker hub
+  - docker build -t $REPO_ECR -f Dockerfile.scratch .  # build docker image for AWS ECR
 install:
   - echo "no installs!" # put normal pre-testing installs here
 script:
   - echo "no tests!" # put testing scripts here
 after_success:
-  - echo $REPO
+  - echo $REPO_DHUB
+  - echo $REPO_ECR
   - echo $TRAVIS_BRANCH
   - echo $TRAVIS_BUILD_NUMBER
   - echo $TRAVIS_COMMIT
@@ -27,22 +30,16 @@ after_success:
   - echo $COMMIT
   - export TAG=`if [ "$TRAVIS_BRANCH" == "master" ]; then echo "latest"; else echo $TRAVIS_BRANCH ; fi`
   - echo $TAG
-  - echo $REPO:$TRAVIS_BRANCH|$TRAVIS_BUILD_NUMBER|$COMMIT
-  - docker --version  # document the version travis is using
   #-----------push to Docker hub-------------------------------
-  #- docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
-  #- docker tag $REPO $REPO:$TAG
-  #- docker tag $REPO $REPO:$TRAVIS_BRANCH-build$TRAVIS_BUILD_NUMBER-$COMMIT
-  #- docker push $REPO
+  - docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"
+  - docker tag $REPO_DHUB $REPO_DHUB:$TAG
+  - docker tag $REPO_DHUB $REPO_DHUB:$TRAVIS_BRANCH-build$TRAVIS_BUILD_NUMBER-$COMMIT
+  - docker push $REPO_DHUB
   #-----------push to AWS--------------------------------------
   - pip install --user awscli # install aws cli w/o sudo
   - export PATH=$PATH:$HOME/.local/bin # put aws in the path
   - eval $(aws ecr get-login --region us-west-2) #needs AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY envvars
-  - docker tag $REPO:latest 053029339054.dkr.ecr.us-west-2.amazonaws.com/$REPO:latest
-  - docker tag $REPO:latest 053029339054.dkr.ecr.us-west-2.amazonaws.com/$REPO:$TRAVIS_BRANCH-build$TRAVIS_BUILD_NUMBER-$COMMIT
-  - docker push 053029339054.dkr.ecr.us-west-2.amazonaws.com/$REPO:latest
-
-#-------------------------------------------------
-# - export REPO=epimelis1/wercker-test-go
-# - docker login -e $DOCKER_EMAIL -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-# - docker push epimelis1/wercker-test-go
+  - docker tag $REPO_ECR 053029339054.dkr.ecr.us-west-2.amazonaws.com/$REPO_ECR:latest
+  - docker tag $REPO_ECR 053029339054.dkr.ecr.us-west-2.amazonaws.com/$REPO_ECR:$TRAVIS_BRANCH-build$TRAVIS_BUILD_NUMBER-$COMMIT
+  - #docker push 053029339054.dkr.ecr.us-west-2.amazonaws.com/$REPO_ECR:latest
+  - docker push 053029339054.dkr.ecr.us-west-2.amazonaws.com/$REPO_ECR
