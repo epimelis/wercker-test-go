@@ -8,18 +8,26 @@ CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o www main.go
 
 
 ---------------------
+# Docker hub
 
+docker login -u="epimelis1" -p="zz"
 docker build -t epimelis1/wercker-test-go -f Dockerfile.scratch .
+docker tag epimelis1/wercker-test-go epimelis1/wercker-test-go:latest
+docker push epimelis1/wercker-test-go
+docker pull epimelis1/wercker-test-go
 
 docker run --rm -p 5000:6000 -e WEB_SERVER_PORT=:6000  epimelis1/wercker-test-go
 
-docker tag epimelis1/wercker-test-go epimelis1/wercker-test-go:latest
-docker tag epimelis1/wercker-test-go epimelis1/wercker-test-go:master-build20
-docker push epimelis1/wercker-test-go
-
 ---------------------
+# Amazon ECR
 
 docker build -t webapp-go -f Dockerfile.scratch .
 
-docker push webapp-go
+eval $(aws ecr get-login --region us-west-2)
 
+docker tag webapp-go 053029339054.dkr.ecr.us-west-2.amazonaws.com/webapp-go:latest
+docker push 053029339054.dkr.ecr.us-west-2.amazonaws.com/webapp-go
+
+docker pull 053029339054.dkr.ecr.us-west-2.amazonaws.com/webapp-go:master-build26-b20f8d0
+
+docker run --rm -p 5000:6000 -e WEB_SERVER_PORT=:6000  053029339054.dkr.ecr.us-west-2.amazonaws.com/webapp-go:master-build26-b20f8d0
