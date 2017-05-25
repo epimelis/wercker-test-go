@@ -31,3 +31,5 @@ docker push 053029339054.dkr.ecr.us-west-2.amazonaws.com/webapp-go
 docker pull 053029339054.dkr.ecr.us-west-2.amazonaws.com/webapp-go:master-build26-b20f8d0
 
 docker run --rm -p 5000:6000 -e WEB_SERVER_PORT=:6000  053029339054.dkr.ecr.us-west-2.amazonaws.com/webapp-go:master-build26-b20f8d0
+
+-----------------------
