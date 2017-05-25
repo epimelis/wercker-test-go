@@ -18,7 +18,7 @@ func handler(w http.ResponseWriter, r *http.Request) {
 }
 
 func CityHandler(res http.ResponseWriter, req *http.Request) {
-	data, _ := json.Marshal("{'cities':'Toronto, Montreal'}")
+	data, _ := json.Marshal("{'cities':'Toronto, Montreal, Ottawa'}")
 	res.Header().Set("Content-Type", "application/json; charset=utf-8")
 	res.Write(data)
 }
