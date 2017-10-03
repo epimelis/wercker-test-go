@@ -10,9 +10,7 @@ import (
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	//t, err := template.ParseFiles("templates/page.html")
-	//w.Header().Set("Access-Control-Allow-Origin", "*")
-	t, err :=template.ParseFiles("charts/csco.html")
+	t, err := template.ParseFiles("templates/page.html")
 	if err != nil {
 		panic(err)
 	}
