@@ -19,10 +19,7 @@
     <div id="container"></div>
     <script type="text/javascript">
 anychart.onDocumentReady(function() {
-  // The data used in this sample can be obtained from the CDN
-  // https://cdn.anychart.com/csv-data/csco-daily.csv
-  //anychart.data.loadCsvFile('https://cdn.anychart.com/csv-data/csco-daily.csv', function(data) {
-  anychart.data.loadCsvFile('http://localhost:8000/static/csco-daily.csv', function(data) {
+    anychart.data.loadCsvFile('http://localhost:8000/charts/csco-daily.csv', function(data) {
     // create data table on loaded data
     var dataTable = anychart.data.table();
     dataTable.addData(data);
