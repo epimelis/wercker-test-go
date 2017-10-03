@@ -23,3 +23,11 @@ _testmain.go
 *.test
 *.prof
 .wercker
+
+# Idea files
+*.iml
+.idea/
+*.log
+
+# Executables
+run1

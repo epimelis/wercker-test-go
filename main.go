@@ -31,6 +31,10 @@ func main() {
 	fmt.Printf("Listening on port %s!\n", port)
 	http.HandleFunc("/cities.json", CityHandler)
 	http.HandleFunc("/", handler)
+
+	fs := http.FileServer(http.Dir("charts"))
+	http.Handle("/charts/", http.StripPrefix("/charts/", fs))
+
 	err := http.ListenAndServe(port, nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
