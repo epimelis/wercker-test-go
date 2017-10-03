@@ -19,7 +19,8 @@
     <div id="container"></div>
     <script type="text/javascript">
 anychart.onDocumentReady(function() {
-    anychart.data.loadCsvFile('http://localhost:5000/charts/csco-daily.csv', function(data) {
+    //anychart.data.loadCsvFile('http://localhost:8000/charts/csco-daily.csv', function(data) {
+    anychart.data.loadCsvFile('http://www.appsmosaic.com:5000/charts/csco-daily.csv', function(data) {
     // create data table on loaded data
     var dataTable = anychart.data.table();
     dataTable.addData(data);
@@ -71,7 +72,9 @@ anychart.onDocumentReady(function() {
 
     // set chart selected date/time range
     chart.selectRange('2001-06-05', '2002-09-26');
+    //chart.selectRange('2008-06-05', '2010-09-26');
     // set container id for the chart
+
     chart.container('container');
     // initiate chart drawing
     chart.draw();
