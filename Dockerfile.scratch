@@ -3,5 +3,6 @@ FROM scratch
 COPY  www /
 COPY templates templates
 COPY charts charts
+COPY csv-data csv-data
 CMD ["/www"]
 
