@@ -26,7 +26,7 @@ func CityHandler(res http.ResponseWriter, req *http.Request) {
 
 func handlerCSV(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	t, err := template.ParseFiles("charts/csco-daily.full.csv")
+	t, err := template.ParseFiles("csv-data/csco-daily.full.csv")
 	if err != nil {
 		panic(err)
 	}
@@ -44,7 +44,7 @@ func main() {
 	http.HandleFunc("/", handler)
 	http.HandleFunc("/cities.json", CityHandler)
 
-	http.HandleFunc("/csv/csco-daily.csv", handlerCSV)
+	http.HandleFunc("/get-csv-data", handlerCSV)
 
 	fs := http.FileServer(http.Dir("charts"))
 	http.Handle("/charts/", http.StripPrefix("/charts/", fs))
