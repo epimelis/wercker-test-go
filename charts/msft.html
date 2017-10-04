@@ -23,8 +23,8 @@ anychart.onDocumentReady(function() {
     //---- ??-------
     //anychart.data.loadCsvFile('https://cdn.anychart.com/csv-data/csco-daily.csv', function(data) {
 
-    anychart.data.loadCsvFile('http://localhost:8000/get-csv-data', function(data) {
-    //anychart.data.loadCsvFile('http://www.appsmosaic.com:5000/get-csv-data', function(data) {
+    //anychart.data.loadCsvFile('http://localhost:8000/get-csv-data', function(data) {
+    anychart.data.loadCsvFile('http://www.appsmosaic.com:5000/get-csv-data', function(data) {
 
     // create data table on loaded data
     var dataTable = anychart.data.table();
@@ -57,17 +57,17 @@ anychart.onDocumentReady(function() {
       .xMinorGrid(true)
       .yMinorGrid(true);
 
-    var series = plot.candlestick(mapping).name('CSCO');
+    var series = plot.candlestick(mapping).name('MSFT');
     series.legendItem().iconType('rising-falling');
 
-    // create BBands indicator with period = 20, deviation = 3
-    plot.bbands(mapping, 20, 3);
+    // create BBands indicator with period = 20, deviation = 2
+    plot.bbands(mapping, 20, 2);
 
     var indicatorPlot = chart.plot(1);
     indicatorPlot.height('30%');
 
-    // create BBands Width indicator with period 20, deviation = 3
-    var bBandsWidthIndicator = indicatorPlot.bbandsWidth(mapping, 20, 3, 'spline-area');
+    // create BBands Width indicator with period 20, deviation = 2
+    var bBandsWidthIndicator = indicatorPlot.bbandsWidth(mapping, 20, 2, 'spline-area');
     bBandsWidthIndicator.series()
       .stroke('1.5 #F18126')
       .fill(anychart.color.lighten(bBandsWidthIndicator.series().stroke().color, 0.5));
