@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-base.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-ui.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-exports.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-stock.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-data-adapter.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.anychart.com/releases/8.0.0/css/anychart-ui.min.css" />
+    <style>
+    html, body, #container {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+<div id="container"></div>
+<script type="text/javascript">
+
+anychart.onDocumentReady(function() {
+
+    // create a data table
+    var dataTable = anychart.data.table();
+    dataTable.addData([
+      ['2016-12-24', 511.534, 514.98, 505.79, 506.40, 100.123],
+      ['2016-12-25', 512.534, 514.88, 505.69, 507.34, 200.456],
+      ['2016-12-26', 511.835, 514.98, 505.59, 506.23, 300.789],
+      ['2016-12-27', 511.225, 515.30, 505.49, 506.47, 400],
+      ['2016-12-28', 510.356, 515.72, 505.23, 505.80, 500],
+      ['2016-12-29', 510.537, 515.86, 505.38, 508.25, 600],
+      ['2016-12-30', 511.438, 515.98, 505.66, 507.45, 700],
+      ['2016-12-31', 511.509, 515.33, 505.99, 507.98, 800],
+      ['2017-01-01', 511.320, 514.29, 505.99, 506.37, 900],
+      ['2017-01-11', 508.900, 516.24, 505.73, 510.40, 100]
+      ]);
+
+    // map the data
+    mapping = dataTable.mapAs({
+      open: 1, high: 2, low: 3, close: 4, Volume: 5
+    });
+
+    // create a stock chart
+    chart = anychart.stock();
+
+    // create two plots
+    var plot_2 = chart.plot(0);
+
+    // create two series: line and ohlc
+    plot_2.ohlc(mapping);
+
+    // format text of the crosshair y-label on plot
+   chart.crosshair().yLabel().format(function(){
+      return this.value.toFixed(3);
+    });
+
+    //format tooltip text
+    var tooltip = chart.tooltip();
+    tooltip.format('Open {%Open}{decimalsCount:3} \nHigh {%High}{decimalsCount:3} \nLow {%Low}{decimalsCount:3} \nClose {%Close}{decimalsCount:3} \nVolume (in thousands) {%Volume}{decimalsCount:3}');
+
+    // set the container id
+    chart.container("container");
+    // initiate drawing the chart
+    chart.draw();
+});
+
+</script>
+</body>
+</html>

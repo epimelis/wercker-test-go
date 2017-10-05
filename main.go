@@ -26,7 +26,6 @@ func CityHandler(res http.ResponseWriter, req *http.Request) {
 
 func handlerCSV(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	//t, err := template.ParseFiles("csv-data/csco-daily.2.csv")
 	t, err := template.ParseFiles("csv-data/msft.csv")
 	if err != nil {
 		panic(err)

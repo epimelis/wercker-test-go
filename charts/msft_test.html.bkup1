@@ -37,10 +37,6 @@ anychart.onDocumentReady(function() {
       'value':4
     });
 
-    var mapping2 = dataTable.mapAs({
-      'value':5
-    });
-
     // map loaded data for the scroller
     var scrollerMapping = dataTable.mapAs();
     scrollerMapping.addField('value', 5);
@@ -58,63 +54,32 @@ anychart.onDocumentReady(function() {
       .yMinorGrid(true)
       .xMinorGrid(true);
 
+/*
+    var series = plot.candlestick(mapping)
+        .name('MSFT')
+        .name('MSFT');
+    series.legendItem().iconType('rising-falling');
+*/
     // plot candlesticks
     plot.candlestick(mapping)
         .name('MSFT')
         .legendItem().iconType('rising-falling');
 
-    //plot.bbands(mapping, 20, 2);
+    plot.bbands(mapping, 20, 2);
 
-    //------------------------------------------------
     // create SMA indicator with period 50
     var sma50 = plot.sma(mapping, 50).series();
     sma50.name('SMA(50)')
       .stroke('#bf360c');
 
-
-    //------------------------------------------------
     // create SMA indicator with period 200
     var sma200 = plot.sma(mapping, 200).series();
     sma200.name('SMA(200)')
       .stroke('#0b1dbf');
 
-
-    //------------------------------------------------
-    // create Volume plot
-    chart.plot(1).height('15%').column(mapping2).name("Volume");
+    chart.plot(1).height('20%').column(mapping).name("Volume");
 
 
-    //------------------------------------------------
-    // create RSI plot
-    chart.plot(2)
-        .height('15%')
-        .rsi(mapping, 14).series()
-        .stroke('#64b5f6');
-
-    //------------------------------------------------
-    // create MacD indicator with fast period 12, slow period 26 and signal period 9
-    var plotMacD = chart.plot(3);
-    plotMacD.height('15%');
-    plotMacD.yAxis(1).orientation('right');
-
-    var indMacD = plotMacD.macd(mapping, 12, 26, 9);
-    indMacD.macdSeries().stroke('#bf360c');
-    indMacD.signalSeries().stroke('#ff6d00');
-    indMacD.histogramSeries().fill('#ffe082');
-
-
-    //------------------------------------------------
-    // create Full Stochastic oscillator indicator with kPeriod = 14, kMAPeriod = 3, dPeriod = 6
-    var plotStoch = chart.plot(4);
-    plotStoch.height('15%');
-    // adding extra Y axis to the right side
-    plotStoch.yAxis(1).orientation('right');
-
-    var indStoch = plotStoch.stochastic(mapping, 14, 3, 6);
-    indStoch.kSeries().stroke('1.5 #e24b26');
-    indStoch.dSeries().stroke('1.5 #6e9c4e');
-
-    //------------------------------------------------
     // create scroller series with mapped data
     chart.scroller().candlestick(mapping);
 
@@ -125,8 +90,8 @@ anychart.onDocumentReady(function() {
         return this.value.toFixed(3);
     });
 
-    //var tooltip = chart.tooltip();
-    //tooltip.format('Open {%Open}{decimalsCount:3} \nHigh {%High}{decimalsCount:3} \nLow {%Low}{decimalsCount:3} \nClose {%Close}{decimalsCount:3} \nVolume (1000) {%value}{decimalsCount:3}' );
+    var tooltip = chart.tooltip();
+    tooltip.format('Open {%Open}{decimalsCount:3} \nHigh {%High}{decimalsCount:3} \nLow {%Low}{decimalsCount:3} \nClose {%Close}{decimalsCount:3} \nVolume (1000) {%value}{decimalsCount:3}' );
 
 
     // set container id for the chart
