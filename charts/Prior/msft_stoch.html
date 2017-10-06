@@ -76,7 +76,7 @@ anychart.onDocumentReady(function() {
     bBandsWidthIndicator.series()
       .stroke('1.5 #F18126')
       .fill(anychart.color.lighten(bBandsWidthIndicator.series().stroke().color, 0.5));
-*/
+
 
 
     //------------------------------------------------
@@ -92,12 +92,11 @@ anychart.onDocumentReady(function() {
     sma200.name('SMA(200)')
       .stroke('#0b1dbf');
 
-
+*/
 
     //------------------------------------------------
     // create Volume plot
     chart.plot(1).height('15%').column(mapping2).name("Volume");
-
 /*
     //------------------------------------------------
     // create RSI plot
@@ -105,30 +104,33 @@ anychart.onDocumentReady(function() {
         .height('15%')
         .rsi(mapping, 14).series()
         .stroke('#64b5f6');
+*/
 
+/*
     //------------------------------------------------
     // create MacD indicator with fast period 12, slow period 26 and signal period 9
     var plotMacD = chart.plot(3);
-    plotMacD.height('15%');
+    plotMacD.height('25%');
     plotMacD.yAxis(1).orientation('right');
 
     var indMacD = plotMacD.macd(mapping, 12, 26, 9);
     indMacD.macdSeries().stroke('#bf360c');
     indMacD.signalSeries().stroke('#ff6d00');
     indMacD.histogramSeries().fill('#ffe082');
+*/
 
 
     //------------------------------------------------
     // create Full Stochastic oscillator indicator with kPeriod = 14, kMAPeriod = 3, dPeriod = 6
     var plotStoch = chart.plot(4);
-    plotStoch.height('15%');
+    plotStoch.height('25%');
     // adding extra Y axis to the right side
     plotStoch.yAxis(1).orientation('right');
 
-    var indStoch = plotStoch.stochastic(mapping, 14, 3, 6);
+    var indStoch = plotStoch.stochastic(mapping, 14, 3, 3);
     indStoch.kSeries().stroke('1.5 #e24b26');
     indStoch.dSeries().stroke('1.5 #6e9c4e');
-*/
+
 
     //------------------------------------------------
     // create scroller series with mapped data

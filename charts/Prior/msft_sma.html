@@ -21,8 +21,8 @@
 <script type="text/javascript">
 anychart.onDocumentReady(function() {
 
-    anychart.data.loadCsvFile('http://localhost:8000/get-csv-data', function(data) {
-    //anychart.data.loadCsvFile('http://www.appsmosaic.com:5000/get-csv-data', function(data) {
+    //anychart.data.loadCsvFile('http://localhost:8000/get-csv-data', function(data) {
+    anychart.data.loadCsvFile('http://www.appsmosaic.com:5000/get-csv-data', function(data) {
 
     // create data table on loaded data
     var dataTable = anychart.data.table();
@@ -37,10 +37,10 @@ anychart.onDocumentReady(function() {
       'value':4
     });
 
-    var mappingVolume = dataTable.mapAs({
+    var mapping2 = dataTable.mapAs({
       'value':5
     });
-    var mappingEvent = dataTable.mapAs({
+    var mapping3 = dataTable.mapAs({
       'value':6
     });
 
@@ -53,111 +53,89 @@ anychart.onDocumentReady(function() {
     chart.crosshair(true);
 
 
-
-
-    //------------------------------------------------
-    // plot candlesticks
-
-    var plot1 = chart.plot(0);
+    // create first plot on the chart
+    var plot = chart.plot(0);
     // set grid settings
-    plot1.yGrid(true)
+    plot.yGrid(true)
       .xGrid(true)
       .yMinorGrid(true)
       .xMinorGrid(true);
-    plot1.candlestick(mapping).name('MSFT');
-        //.legendItem().iconType('rising-falling');
 
-
-    chart.tooltip().format('Open {%Open}{decimalsCount:3} \nHigh {%High}{decimalsCount:3} \nLow {%Low}{decimalsCount:3} \nClose {%Close}{decimalsCount:3}');
+    // plot candlesticks
+    plot.candlestick(mapping)
+        .name('MSFT')
+        .legendItem().iconType('rising-falling');
 
 /*
-    plot1.legend().itemsFormat(function(){
-        return "Open: " + this.open + "   High: " + this.high+ "   Low: " + this.low + "   Close: " + this.close
-    });
+    //------------------------------------------------
+    // create BBands indicator with period = 20, deviation = 2
+    plot.bbands(mapping, 20, 2);
+
+    var indicatorBB = chart.plot(1);
+    indicatorBB.height('30%');
+
+    // create BBands Width indicator with period 20, deviation = 2
+    var bBandsWidthIndicator = indicatorBB.bbandsWidth(mapping, 20, 2, 'spline-area');
+    bBandsWidthIndicator.series()
+      .stroke('1.5 #F18126')
+      .fill(anychart.color.lighten(bBandsWidthIndicator.series().stroke().color, 0.5));
 */
 
+
     //------------------------------------------------
-    // create RSI plot - as plot2
-
-    plot2=chart.plot(1);
-    plot2.height('25%');
-    plot2.legend().itemsFormat(function(){
-        return 'RSI: ' + this.value
-    });
-
-    series2=plot2.rsi(mapping, 14).series();
-    series2.tooltip().format('RSI : {%value}{decimalsCount:3}');
-    series2.stroke('#64b5f6');
+    // create SMA indicator with period 50
+    var sma50 = plot.sma(mapping, 50).series();
+    sma50.name('SMA(50)')
+      .stroke('#bf360c');
 
 
     //------------------------------------------------
-    //Create Bollinger Bands
-
-    /*
-    plot.bbands(mapping, 20, 2);
-    */
-
-    //--------SMA50------------------------------------
-
-    var series_sma50 = plot1.sma(mapping, 50).series();
-    series_sma50.name('SMA(50)').stroke('#bf360c');
-    series_sma50.tooltip().format('SMA50: {%value}{decimalsCount:3}');
+    // create SMA indicator with period 200
+    var sma200 = plot.sma(mapping, 200).series();
+    sma200.name('SMA(200)')
+      .stroke('#0b1dbf');
 
 
-    //--------SMA200-----------------------------------
-    var series_sma200 = plot1.sma(mapping, 200).series();
-    series_sma200.name('SMA(200)').stroke('#0b1dbf');
-    series_sma200.tooltip().format('SMA200: {%value}{decimalsCount:3}');
 
     //------------------------------------------------
     // create Volume plot
-
-    /*
-    chart.plot(1).height('25%').column(mappingVolume).name("Volume");
-    */
-
-
+    chart.plot(1).height('15%').column(mapping2).name("Volume");
     //------------------------------------------------
     // create Event plot
+    chart.plot(2).height('15%').column(mapping2).name("Event");
 
-    /*
-    chart.plot(1).height('25%').column(mappingEvent).name("Event");
-    */
+/*
+    //------------------------------------------------
+    // create RSI plot
+    chart.plot(2)
+        .height('15%')
+        .rsi(mapping, 14).series()
+        .stroke('#64b5f6');
 
     //------------------------------------------------
     // create MacD indicator with fast period 12, slow period 26 and signal period 9
-
-    /*
-    var plotMacD = chart.plot(1);
-    plotMacD.height('25%');
+    var plotMacD = chart.plot(3);
+    plotMacD.height('15%');
     plotMacD.yAxis(1).orientation('right');
 
     var indMacD = plotMacD.macd(mapping, 12, 26, 9);
     indMacD.macdSeries().stroke('#bf360c');
     indMacD.signalSeries().stroke('#ff6d00');
     indMacD.histogramSeries().fill('#ffe082');
-    */
+
 
     //------------------------------------------------
-    /*
     // create Full Stochastic oscillator indicator with kPeriod = 14, kMAPeriod = 3, dPeriod = 6
     var plotStoch = chart.plot(4);
-    plotStoch.height('25%');
+    plotStoch.height('15%');
     // adding extra Y axis to the right side
     plotStoch.yAxis(1).orientation('right');
 
     var indStoch = plotStoch.stochastic(mapping, 14, 3, 6);
     indStoch.kSeries().stroke('1.5 #e24b26');
     indStoch.dSeries().stroke('1.5 #6e9c4e');
+*/
 
-    */
-
-    //------------------------------------------------
-    // create ATR indicator with period = 14
-
-    /*
-    chart.plot(1).height('25%').atr(mapping, 14, 'spline').series().stroke('1.5 #ff6d00');
-    */
 
     //------------------------------------------------
     // create scroller series with mapped data
@@ -170,14 +148,10 @@ anychart.onDocumentReady(function() {
         return this.value.toFixed(3);
     });
 
-    //-------------Format tooltip---------------------------------
-/*
-    var tooltip = aa.tooltip();
-    tooltip.format('Open {%Open}{decimalsCount:3} \nHigh {%High}{decimalsCount:3} \nLow {%Low}{decimalsCount:3} \nClose {%Close}{decimalsCount:3}');
-*/
+    //var tooltip = chart.tooltip();
+    //tooltip.format('Open {%Open}{decimalsCount:3} \nHigh {%High}{decimalsCount:3} \nLow {%Low}{decimalsCount:3} \nClose {%Close}{decimalsCount:3} \nVolume (1000) {%value}{decimalsCount:3}' );
 
 
-    //------------------------------------------------------------
     // set container id for the chart
     chart.container('container');
     // initiate chart drawing

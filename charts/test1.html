@@ -1,81 +1,88 @@
-<!doctype html>
-<html>
-<head>
-    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-base.min.js"></script>
-    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-ui.min.js"></script>
-    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-exports.min.js"></script>
-    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-stock.min.js"></script>
-    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-data-adapter.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.anychart.com/releases/8.0.0/css/anychart-ui.min.css" />
-    <style>
-    html, body, #container {
-      width: 100%;
-      height: 100%;
-      margin: 0;
-      padding: 0;
-    }
-  </style>
-</head>
-<body>
+<script src="https://cdn.anychart.com/js/8.0.0/anychart-bundle.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-base.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-stock.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-annotations.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-exports.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-ui.min.js"></script>
+<script src="https://cdn.anychart.com/csv-data/csco-daily-short.js"></script>
 <div id="container"></div>
-<script type="text/javascript">
+<script>
 
-var table, mapping, chart;
 anychart.onDocumentReady(function() {
 
-table = anychart.data.table();
-table.addData([
-	['2015-12-24', 511.53, 514.98, 505.79, 506.40,1000.123],
-	['2015-12-25', 512.53, 514.88, 505.69, 507.34,2000.456],
-	['2015-12-26', 511.83, 514.98, 505.59, 506.23,3000.789],
-	['2015-12-27', 511.22, 515.30, 505.49, 506.47,4000.123],
-	['2015-12-28', 510.35, 515.72, 505.23, 505.80,5000.456],
-	['2015-12-29', 510.53, 515.86, 505.38, 508.25,1000.789],
-	['2015-12-30', 511.43, 515.98, 505.66, 507.45,1000],
-	['2015-12-31', 511.50, 515.33, 505.99, 507.98,1000],
-	['2016-01-01', 511.32, 514.29, 505.99, 506.37,1000],
-	['2016-01-02', 511.70, 514.87, 506.18, 506.75,1000],
-	['2016-01-03', 512.30, 514.78, 505.87, 508.67,1000],
-	['2016-01-04', 512.50, 514.77, 505.83, 508.35,1000],
-	['2016-01-05', 511.53, 516.18, 505.91, 509.42,1000],
-	['2016-01-06', 511.13, 516.01, 506.00, 509.26,1000],
-	['2016-01-07', 510.93, 516.07, 506.00, 510.99,1000],
-	['2016-01-08', 510.88, 515.93, 505.22, 509.95,1000],
-	['2016-01-09', 509.12, 515.97, 505.15, 510.12,1000],
-	['2016-01-10', 508.53, 516.13, 505.66, 510.42,1000],
-	['2016-01-11', 508.90, 516.24, 505.73, 510.40,1000]
+// create a data table
+var dataTable = anychart.data.table();
+dataTable.addData([
+['2016-12-24', 511.534, 514.986, 505.079, 506.403],
+['2016-12-25', 512.534, 514.884, 505.069, 507.342],
+['2016-12-26', 511.835, 514.988, 505.059, 506.235],
+['2016-12-27', 511.22, 515.003, 505.049, 506.474],
+['2016-12-28', 510.356, 515.724, 505.023, 505.802],
+['2016-12-29', 510.537, 515.061, 505.038, 508.255],
+['2016-12-30', 511.438, 515.986, 505.066, 507.457],
+['2016-12-31', 511.509, 515.339, 505.099, 507.984],
+['2017-01-01', 511.320, 514.294, 505.699, 506.377],
+['2017-01-02', 511.701, 514.871, 506.218, 506.750],
+['2017-01-03', 512.302, 514.787, 505.287, 508.673],
+['2017-01-04', 512.503, 514.770, 505.583, 508.352],
+['2017-01-05', 511.534, 516.185, 505.691, 509.425],
+['2017-01-06', 511.135, 516.012, 506.101, 509.260],
+['2017-01-07', 510.936, 516.007, 506.200, 510.990],
+['2017-01-08', 510.887, 515.093, 505.022, 509.950],
+['2017-01-09', 509.128, 515.097, 505.415, 510.124],
+['2017-01-10', 508.539, 516.113, 505.166, 510.422],
+['2017-01-11', 508.900, 516.424, 505.473, 510.405]
 ]);
 
-// mapping the data
-mapping = table.mapAs();
-mapping.addField('open', 1, 'first');
-mapping.addField('high', 2, 'max');
-mapping.addField('low', 3, 'min');
-mapping.addField('close', 4, 'last');
-mapping.addField('value', 5, 'last');
+// map the data
+mapping = dataTable.mapAs({
+open: 1, high: 2, low: 3, close: 4, value: 4
+});
 
-
-// defining the chart type
+// create a stock chart
 chart = anychart.stock();
-chart.crosshair(false);
 
-// set the series type
-chart.plot(0).candlestick(mapping).name('MSFT');
-chart.plot(1).column(mapping).name("Volume");
+// create two plots and set two series: ohlc and column
+var plot_1 = chart.plot(0).ohlc(mapping);
+//var plot_1A = chart.plot(0).sma(mapping, 5).series().name('SMA(5)').stroke('#bf360c');
+var plot_2 = chart.plot(1).column(mapping);
 
-// setting the chart title
-chart.title('MSFT stock chart');
-
-//format tooltip text
-var tooltip = chart.tooltip();
-tooltip.format('Open {%Open}{decimalsCount:3} \nHigh {%High}{decimalsCount:3} \nLow {%Low}{decimalsCount:3} \nClose {%close}{decimalsCount:3} \nVolume {%value}{decimalsCount:3}');
+//plot_1A.tooltip().format('SMA5: {%value}{decimalsCount:3}');
 
 
-// display the chart
-chart.container('container');
+// format text of the crosshair y-label on plot
+chart.crosshair().yLabel().format(function(){
+return this.value.toFixed(3);
+});
+
+//format tooltip text for the 1st series
+var tooltip_1 = plot_1.tooltip();
+tooltip_1.format('Open {%Open}{decimalsCount:3} \nHigh {%High}{decimalsCount:3} \nLow {%Low}{decimalsCount:3} \nClose {%Close}{decimalsCount:3}');
+
+//format tooltip text for the 2nd series
+var tooltip_2 = plot_2.tooltip();
+tooltip_2.format('Value for 2nd Plot {%value}{decimalsCount:3}');
+
+//format legend for the 1st plot
+chart.plot(0).legend().itemsFormat(function(){
+return "Open: " + this.open + "   High: " + this.high+ "   Low: " + this.low + "   Close: " + this.close
+});
+
+
+
+
+//format legend for the 2nd plot
+chart.plot(1).legend().itemsFormat(function(){
+return 'Value: ' + this.value
+});
+
+// set the container id
+chart.container("container");
+// initiate drawing the chart
 chart.draw();
 });
 
 </script>
 </body>
 </html>
+

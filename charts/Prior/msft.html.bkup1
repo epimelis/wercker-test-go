@@ -21,8 +21,8 @@
 <script type="text/javascript">
 anychart.onDocumentReady(function() {
 
-    //anychart.data.loadCsvFile('http://localhost:8000/get-csv-data', function(data) {
-    anychart.data.loadCsvFile('http://www.appsmosaic.com:5000/get-csv-data', function(data) {
+    anychart.data.loadCsvFile('http://localhost:8000/get-csv-data', function(data) {
+    //anychart.data.loadCsvFile('http://www.appsmosaic.com:5000/get-csv-data', function(data) {
 
     // create data table on loaded data
     var dataTable = anychart.data.table();
@@ -37,8 +37,11 @@ anychart.onDocumentReady(function() {
       'value':4
     });
 
-    var mapping2 = dataTable.mapAs({
+    var mappingVolume = dataTable.mapAs({
       'value':5
+    });
+    var mappingEvent = dataTable.mapAs({
+      'value':6
     });
 
     // map loaded data for the scroller
@@ -63,21 +66,7 @@ anychart.onDocumentReady(function() {
         .name('MSFT')
         .legendItem().iconType('rising-falling');
 
-/*
-    //------------------------------------------------
-    // create BBands indicator with period = 20, deviation = 2
-    plot.bbands(mapping, 20, 2);
-
-    var indicatorBB = chart.plot(1);
-    indicatorBB.height('30%');
-
-    // create BBands Width indicator with period 20, deviation = 2
-    var bBandsWidthIndicator = indicatorBB.bbandsWidth(mapping, 20, 2, 'spline-area');
-    bBandsWidthIndicator.series()
-      .stroke('1.5 #F18126')
-      .fill(anychart.color.lighten(bBandsWidthIndicator.series().stroke().color, 0.5));
-
-
+    //plot.bbands(mapping, 20, 2);
 
     //------------------------------------------------
     // create SMA indicator with period 50
@@ -92,44 +81,49 @@ anychart.onDocumentReady(function() {
     sma200.name('SMA(200)')
       .stroke('#0b1dbf');
 
-*/
 
     //------------------------------------------------
     // create Volume plot
-    chart.plot(1).height('15%').column(mapping2).name("Volume");
-/*
+    chart.plot(1).height('15%').column(mappingVolume).name("Volume");
+    //------------------------------------------------
+    // create Event plot
+    chart.plot(10).height('15%').column(mappingEvent).name("Event");
+
+
     //------------------------------------------------
     // create RSI plot
     chart.plot(2)
         .height('15%')
         .rsi(mapping, 14).series()
         .stroke('#64b5f6');
-*/
 
-/*
     //------------------------------------------------
     // create MacD indicator with fast period 12, slow period 26 and signal period 9
     var plotMacD = chart.plot(3);
-    plotMacD.height('25%');
+    plotMacD.height('15%');
     plotMacD.yAxis(1).orientation('right');
 
     var indMacD = plotMacD.macd(mapping, 12, 26, 9);
     indMacD.macdSeries().stroke('#bf360c');
     indMacD.signalSeries().stroke('#ff6d00');
     indMacD.histogramSeries().fill('#ffe082');
-*/
 
 
     //------------------------------------------------
     // create Full Stochastic oscillator indicator with kPeriod = 14, kMAPeriod = 3, dPeriod = 6
     var plotStoch = chart.plot(4);
-    plotStoch.height('25%');
+    plotStoch.height('15%');
     // adding extra Y axis to the right side
     plotStoch.yAxis(1).orientation('right');
 
     var indStoch = plotStoch.stochastic(mapping, 14, 3, 6);
     indStoch.kSeries().stroke('1.5 #e24b26');
     indStoch.dSeries().stroke('1.5 #6e9c4e');
+
+
+    //------------------------------------------------
+    // create ATR indicator with period = 14
+    chart.plot(5).height('15%').atr(mapping, 14, 'spline').series().stroke('1.5 #ff6d00');
 
 
     //------------------------------------------------
