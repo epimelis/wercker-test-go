@@ -1,0 +1,132 @@
+<!doctype html>
+<html>
+<head>
+    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-base.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-ui.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-exports.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-stock.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-data-adapter.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.anychart.com/releases/8.0.0/css/anychart-ui.min.css" />
+    <style>
+    html, body, #container {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+<div id="container"></div>
+<script type="text/javascript">
+anychart.onDocumentReady(function() {
+
+    //anychart.data.loadCsvFile('http://localhost:8000/get-csv-data', function(data) {
+    anychart.data.loadCsvFile('http://www.appsmosaic.com:5000/get-csv-data', function(data) {
+
+    // create data table on loaded data
+    var dataTable = anychart.data.table();
+    dataTable.addData(data);
+
+    // map loaded data for the ohlc series
+    var mapping = dataTable.mapAs({
+      'open': 1,
+      'high': 2,
+      'low': 3,
+      'close': 4,
+      'value':4
+    });
+
+    var mappingVolume = dataTable.mapAs({
+      'value':5
+    });
+    var mappingEvent = dataTable.mapAs({
+      'value':6
+    });
+
+    // map loaded data for the scroller
+    var scrollerMapping = dataTable.mapAs();
+    scrollerMapping.addField('value', 5);
+
+    // create stock chart
+    chart = anychart.stock();
+    chart.crosshair(true);
+
+    //------------------------------------------------
+    // plot candlesticks
+
+    var plot0 = chart.plot(0);
+    // set grid settings
+    plot0.yGrid(true)
+      .xGrid(true)
+      .yMinorGrid(true)
+      .xMinorGrid(true);
+    plot0.candlestick(mapping).name('MSFT')
+        .legendItem().iconType('rising-falling');
+
+    //chart.tooltip().format('Open {%Open}{decimalsCount:3} \nHigh {%High}{decimalsCount:3} \nLow {%Low}{decimalsCount:3} \nClose {%Close}{decimalsCount:3}');
+
+    //--------SMA50------------------------------------
+    var series_sma50 = plot0.sma(mapping, 50).series();
+    series_sma50.name('SMA(50)').stroke('#bf360c');
+    series_sma50.tooltip().format('SMA50: {%value}{decimalsCount:3}');
+
+
+    //--------SMA200-----------------------------------
+    var series_sma200 = plot0.sma(mapping, 200).series();
+    series_sma200.name('SMA(200)').stroke('#0b1dbf');
+    series_sma200.tooltip().format('SMA200: {%value}{decimalsCount:3}');
+
+
+    //------------------------------------------------
+    // Indicator - slow stochastics (kPeriod = 14, kMAPeriod = 3, dPeriod = 3)
+
+    var plotStoch = chart.plot(1);
+    plotStoch.height('35%');
+    // adding extra Y axis to the right side
+    plotStoch.yAxis(1).orientation('right');
+
+    var indStoch = plotStoch.stochastic(mapping, 14, 3, 3);
+    indStoch.kSeries().stroke('1.5 #e24b26');
+    indStoch.dSeries().stroke('1.5 #6e9c4e');
+
+
+    //------------------------------------------------
+    // create Volume plot
+    chart.plot(2).height('10%').column(mappingVolume).name("Volume");
+
+
+
+    //------------------------------------------------
+    // create scroller series with mapped data
+    chart.scroller().candlestick(mapping);
+
+    // set chart selected date/time range
+    //chart.selectRange('2007-01-03', '2007-05-20');
+
+    chart.crosshair().yLabel().format(function(){
+        return this.value.toFixed(3);
+    });
+
+
+    //------------------------------------------------------------
+    // set container id for the chart
+    chart.container('container');
+    // initiate chart drawing
+    chart.draw();
+
+    // create range picker
+    rangePicker = anychart.ui.rangePicker();
+    // init range picker
+    rangePicker.render(chart);
+
+    // create range selector
+    rangeSelector = anychart.ui.rangeSelector();
+    // init range selector
+    rangeSelector.render(chart);
+  });
+});
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,86 @@
+<script src="https://cdn.anychart.com/js/8.0.0/anychart-bundle.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-base.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-stock.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-annotations.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-exports.min.js"></script>
+<script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-ui.min.js"></script>
+<script src="https://cdn.anychart.com/csv-data/csco-daily-short.js"></script>
+<!--https://jsfiddle.net/169cr93y/-->
+<div id="container"></div>
+<script>
+
+anychart.onDocumentReady(function() {
+
+    // create a data table
+    var dataTable = anychart.data.table();
+    dataTable.addData([
+      ['2016-12-24', 511.534, 514.986, 505.079, 506.403, 110000.123],
+      ['2016-12-25', 512.534, 514.884, 505.069, 507.342, 100000.456],
+      ['2016-12-26', 511.835, 514.988, 505.059, 506.235, 100000.789],
+      ['2016-12-27', 511.22, 515.003, 505.049, 506.474,  100000],
+      ['2016-12-28', 510.356, 515.724, 505.023, 505.802, 100000],
+      ['2016-12-29', 510.537, 515.061, 505.038, 508.255, 100000],
+      ['2016-12-30', 511.438, 515.986, 505.066, 507.457, 100000],
+      ['2016-12-31', 511.509, 515.339, 505.099, 507.984, 100000],
+      ['2017-01-01', 511.320, 514.294, 505.699, 506.377, 100000],
+      ['2017-01-02', 511.701, 514.871, 506.218, 506.750, 100000],
+      ['2017-01-03', 512.302, 514.787, 505.287, 508.673, 100000],
+      ['2017-01-04', 512.503, 514.770, 505.583, 508.352, 100000],
+      ['2017-01-05', 511.534, 516.185, 505.691, 509.425, 100000],
+      ['2017-01-06', 511.135, 516.012, 506.101, 509.260, 100000],
+      ['2017-01-07', 510.936, 516.007, 506.200, 510.990, 100000],
+      ['2017-01-08', 510.887, 515.093, 505.022, 509.950, 100000],
+      ['2017-01-09', 509.128, 515.097, 505.415, 510.124, 100000],
+      ['2017-01-10', 508.539, 516.113, 505.166, 510.422, 100000],
+      ['2017-01-11', 508.900, 516.424, 505.473, 510.405, 100000]
+      ]);
+
+    // map the data
+    mapping = dataTable.mapAs({
+      open: 1, high: 2, low: 3, close: 4, value: 4
+    });
+
+		mappingVolume= dataTable.mapAs({
+      value: 5
+    });
+    // create a stock chart
+    chart = anychart.stock();
+
+    // create two plots and set two series: ohlc and column
+    var ohlc1 = chart.plot(0).ohlc(mapping);
+    var sma1 = chart.plot(0).sma(mapping, 5).series();
+    var sma1 = chart.plot(0).sma(mapping, 1).series();
+
+     var column2 = chart.plot(1).column(mappingVolume);
+
+    // format text of the crosshair y-label on plot
+   chart.crosshair().yLabel().format(function(){
+      return this.value.toFixed(3);
+    });
+
+     //format tooltip text for the 1st series
+     ohlc1.tooltip().format('Open {%Open}{decimalsCount:3} \nHigh {%High}{decimalsCount:3} \nLow {%Low}{decimalsCount:3} \nClose {%Close}{decimalsCount:3}');
+
+    //format tooltip text for the 2nd series
+    column2.tooltip().format('Value for 2nd Plot {%value}{decimalsCount:3}');
+
+    //format legend for the 1st plot
+       ohlc1.legendItem().format(function(){
+      return "Open: " + this.open + "   High: " + this.high+ "   Low: " + this.low + "   Close: " + this.close
+  });
+
+  //format legend for the 2nd plot
+     column2.legendItem().format(function(){
+      return 'Value: ' + this.value
+  });
+
+    // set the container id
+    chart.container("container");
+    // initiate drawing the chart
+    chart.draw();
+});
+
+</script>
+</body>
+</html>
+
