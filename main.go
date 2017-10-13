@@ -7,7 +7,25 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"database/sql"
+	_ "github.com/go-sql-driver/mysql"
+	"bytes"
+	"strconv"
 )
+
+// declare chart serie type
+type Serie struct {
+	Name  string `json:"name"`
+	Value int    `json:"value"`
+	/*
+	Open string `json:"open"`
+	High int    `json:"high"`
+	Low int    `json:"low"`
+	Close int    `json:"close"`
+	Volume int    `json:"volume"`
+	*/
+}
+var db *sql.DB
 
 func handler(w http.ResponseWriter, r *http.Request) {
 	t, err := template.ParseFiles("templates/page.html")
@@ -34,6 +52,156 @@ func handlerCSV(w http.ResponseWriter, r *http.Request) {
 }
 
 
+
+func handlerJson1(res http.ResponseWriter, req *http.Request) {
+	res.Header().Set("Access-Control-Allow-Origin", "*")
+
+	//error code for data
+	//data, _ := json.Marshal("[{'name':'oranges','value':100},{'name':'bananas','value':200},{'name':'apples','value':300}]")
+
+	//working code data data
+	data, _ := json.Marshal("[{\"name\":\"oranges\",\"value\":100},{\"name\":\"bananas\",\"value\":200},{\"name\":\"apples\",\"value\":300}]")
+
+	res.Header().Set("Content-Type", "application/json; charset=utf-8")
+	res.Write(data)
+
+
+	fmt.Println("aa1 : data")
+	fmt.Println(data)
+	fmt.Println("aa2 : string(data)")
+	fmt.Println(string(data))
+	fmt.Println("aa3")
+
+
+}
+
+
+func handlerJson2(res http.ResponseWriter, req *http.Request) {
+
+	res.Header().Set("Access-Control-Allow-Origin", "*")
+	data_DB_series := getFruits(3)
+	// decode chart data to JSON
+	data_json, err := json.Marshal(data_DB_series)
+
+	if err != nil {
+		http.Error(res, err.Error(), 500)
+		return
+	}
+
+	//res.Header().Set("Content-Type", "application/json; charset=utf-8")
+	res.Header().Set("Content-Type", "application/json")
+	res.Write(data_json)
+
+	/*
+	fmt.Println("bb0 : db series")
+	fmt.Println(data_DB_series)
+	fmt.Println("bb1 : data_json")
+	fmt.Println(data_json)
+	fmt.Println("bb2 : string(data_json)")
+	fmt.Println(string(data_json))
+	fmt.Println("bb3")
+	*/
+
+}
+
+func handlerJson3(res http.ResponseWriter, req *http.Request) {
+
+	var str bytes.Buffer
+	str.WriteString("[")
+
+	fmt.Println(str.String())
+
+	res.Header().Set("Access-Control-Allow-Origin", "*")
+	fmt.Println("cc1 ")
+	data_series := getFruits(1)
+
+	for _, elem := range data_series {
+		fmt.Println(elem.Name)
+		fmt.Println(elem.Value)
+		str.WriteString("{\"name\":\"")
+		str.WriteString(elem.Name)
+		str.WriteString("\",\"value\":")
+		str.WriteString(strconv.Itoa(elem.Value))
+		str.WriteString("}]")
+
+	}
+
+
+	fmt.Println("cc2 ")
+	fmt.Println(str)
+	fmt.Println("cc3 ")
+	fmt.Println(str.String())
+	res.Header().Set("Content-Type", "application/json")
+	strByte := []byte(str.String())
+	res.Write(strByte)
+
+
+}
+
+
+func handlerCSV3(res http.ResponseWriter, req *http.Request) {
+
+	var str bytes.Buffer
+
+	fmt.Println(str.String())
+
+	res.Header().Set("Access-Control-Allow-Origin", "*")
+	fmt.Println("cc1 ")
+	data_series := getFruits(3)
+
+	for _, elem := range data_series {
+		fmt.Println(elem.Name)
+		fmt.Println(elem.Value)
+		str.WriteString(elem.Name)
+		str.WriteString(",")
+		str.WriteString(strconv.Itoa(elem.Value))
+		str.WriteString("\n")
+
+	}
+
+	fmt.Println("cc2 ")
+	fmt.Println(str)
+	fmt.Println("cc3 ")
+	fmt.Println(str.String())
+	res.Header().Set("Content-Type", "application/csv")
+
+	strByte := []byte(str.String())
+	res.Write(strByte)
+}
+
+
+// init db and page template
+func init() {
+	//pageTemplate = template.Must(template.ParseFiles("templates/index.html"))
+	var err error
+	db, err = sql.Open("mysql", "ayong:ayong@/anychart_db")
+	if err != nil {
+		panic(err)
+	}
+}
+
+// get top fruits from database
+func getFruits(count int) []Serie {
+	res, err := db.Query("SELECT * FROM fruits ORDER BY value DESC LIMIT ?", count)
+	if err != nil {
+		panic(err)
+	}
+	defer res.Close()
+	var (
+		id, value int
+		name      string
+		series    []Serie
+	)
+	for res.Next() {
+		err = res.Scan(&id, &name, &value)
+		if err != nil {
+			panic(err)
+		}
+		series = append(series, Serie{name, value})
+	}
+	return series
+}
+
 func main() {
 	port := os.Getenv("WEB_SERVER_PORT")
 	if port == "" {
@@ -45,6 +213,11 @@ func main() {
 	http.HandleFunc("/cities.json", CityHandler)
 
 	http.HandleFunc("/get-csv-data", handlerCSV)
+	http.HandleFunc("/get-csv3", handlerCSV3)
+	http.HandleFunc("/get-json1", handlerJson1)
+	http.HandleFunc("/get-json2", handlerJson2)
+	http.HandleFunc("/get-json3", handlerJson3)
+
 
 	fs := http.FileServer(http.Dir("charts"))
 	http.Handle("/charts/", http.StripPrefix("/charts/", fs))

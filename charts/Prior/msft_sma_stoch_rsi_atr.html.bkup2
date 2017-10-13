@@ -23,8 +23,8 @@ anychart.onDocumentReady(function() {
 
     //--------------Init data and data mappings--------------------------------------------------------------------
 
-    anychart.data.loadCsvFile('http://localhost:8000/get-csv', function(data) {
-    //anychart.data.loadCsvFile('http://www.appsmosaic.com:5000/get-csv-data', function(data) {
+    //anychart.data.loadCsvFile('http://localhost:8000/get-csv-data', function(data) {
+    anychart.data.loadCsvFile('http://www.appsmosaic.com:5000/get-csv-data', function(data) {
 
     // create data table on loaded data
     var dataTable = anychart.data.table();
@@ -42,8 +42,8 @@ anychart.onDocumentReady(function() {
     var mappingVolume = dataTable.mapAs({
       'value':5
     });
-    var mappingATR2 = dataTable.mapAs({
-      'value':6
+    var mappingATR = dataTable.mapAs({
+      'value':1
     });
 
 
@@ -157,7 +157,7 @@ anychart.onDocumentReady(function() {
       return 'RSI: ' + this.value.toFixed(3)
     });
 */
-    //-----plot4 - ATR from Anychart function -----------------------------------------
+    //-----plot4 - ATR -----------------------------------------
 
     var plot4 = chart.plot(4);
     plot4.height('25%');
@@ -177,12 +177,11 @@ anychart.onDocumentReady(function() {
       return 'ATR: ' + this.value.toFixed(3)
     });
 
-    //-----plot5 - ATR2 - from PLSQL calculation -----------------------------------------
+    //-----plot5 - ATR -----------------------------------------
 
     plot5=chart.plot(5);
     plot5.height('25%');
-
-    atr2=plot5.line().data(mappingATR2);
+    atr2=plot5.line().data(mappingATR);
 
     atr2.name('ATR2')
 
