@@ -39,8 +39,12 @@ anychart.onDocumentReady(function() {
 
 anychart.onDocumentReady(function () {
     //anychart.data.loadJsonFile("https://cdn.anychart.com/charts-data/data_json.json", function (data) {
-    anychart.data.loadJsonFile("http://localhost:8000/get-json1", function (data) {
-        chart = anychart.pie(JSON.parse(data));
+
+    //anychart.data.loadJsonFile("http://localhost:8000/get-json1", function (data) {
+    //  chart = anychart.pie(JSON.parse(data));
+
+    anychart.data.loadCsvFile("http://localhost:8000/get-csv3", function (data) {
+        chart = anychart.pie(data);
         chart.container("container");
         chart.draw();
         //document.write(data);

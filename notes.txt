@@ -1,0 +1,4 @@
+This repo CI using Travis to AWS
+http://localhost:8000/charts/stkchart_json.html
+http://localhost:8000/get-json-stk
+http://localhost:8000/get-json-events

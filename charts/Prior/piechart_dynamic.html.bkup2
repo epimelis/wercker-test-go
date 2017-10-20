@@ -1,0 +1,89 @@
+<!doctype html>
+<html>
+<head>
+    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-base.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-ui.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-exports.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-stock.min.js"></script>
+    <script src="https://cdn.anychart.com/releases/8.0.0/js/anychart-data-adapter.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.anychart.com/releases/8.0.0/css/anychart-ui.min.css" />
+    <style>
+    html, body, #container {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+      padding: 0;
+    }
+  </style>
+</head>
+<body>
+<div id="container"></div>
+<script type="text/javascript">
+var aaa="hello andrew!";
+
+anychart.onDocumentReady(function() {
+    var csvType = prompt("Enter csv type", "");
+    var csvLink ='http://localhost:8000/get-csv-' + csvType;
+    //--------------Init data and data mappings--------------------------------------------------------------------
+
+    //anychart.data.loadCsvFile('http://localhost:8000/get-csv-stk', function(data) {
+    //anychart.data.loadCsvFile('http://www.appsmosaic.com:5000/get-csv-data', function(data) {
+    anychart.data.loadCsvFile(csvLink, function(data) {
+
+    // create data table on loaded data
+    var dataTable = anychart.data.table();
+    dataTable.addData(data);
+
+    // map loaded data for the ohlc series
+    var mapping = dataTable.mapAs({
+      'open': 1,
+      'high': 2,
+      'low': 3,
+      'close': 4,
+      'value':4
+    });
+
+    var mappingVolume = dataTable.mapAs({
+      'value':5
+    });
+    var mappingATR2 = dataTable.mapAs({
+      'value':6
+    });
+
+
+    //------init chart --------------------------
+
+    chart = anychart.stock();
+    chart.crosshair(true);
+
+    //-----  plot0 - candlestick with series sma50 and sma200 -----------------------------------------------
+
+    var plot0 = chart.plot(0);
+    plot0.yGrid(true)
+      .xGrid(true)
+      .yMinorGrid(true)
+      .xMinorGrid(true);
+
+    var cs = plot0.candlestick(mapping);
+    cs.name('MSFT').legendItem().iconType('rising-falling');
+
+    chart.scroller().candlestick(mapping);
+    chart.container('container');
+    chart.draw();
+    rangePicker = anychart.ui.rangePicker();
+    rangePicker.render(chart);
+
+    rangeSelector = anychart.ui.rangeSelector();
+    rangeSelector.render(chart);
+
+
+    //document.write(csvLink);
+
+  });
+});
+
+
+
+    </script>
+</body>
+</html>
